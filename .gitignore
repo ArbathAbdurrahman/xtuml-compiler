@@ -2,6 +2,7 @@ target/
 .idea/
 .vscode/
 .cache/
+.output/
 
 .log
 .env
