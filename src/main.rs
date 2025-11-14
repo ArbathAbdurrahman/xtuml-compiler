@@ -42,8 +42,14 @@ fn main() -> Result<()> {
         "c" => generator::c::generate(&model, &args.out)?,
         "java" => generator::java::generate(&model, &args.out)?,
         "php" => generator::php::generate(&model, &args.out)?,
+        "golang" => generator::golang::generate(&model, &args.out)?,
+        "swift" => generator::swift::generate(&model, &args.out)?,
+        "typescript" => generator::typescript::generate(&model, &args.out)?,
+        "rust" => generator::rust::generate(&model, &args.out)?,
+        "ruby" => generator::ruby::generate(&model, &args.out)?,
+        "csharp" => generator::csharp::generate(&model, &args.out)?,
         other => {
-            eprintln!("Language '{}' not implemented. Only 'python' is available in this demo.", other);
+            eprintln!("Language '{}' not supported, only python, javascript, c, java, php, golang, swift, typescript, rust, ruby, csharp. ", other);
         }
     }
 

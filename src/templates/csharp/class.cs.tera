@@ -1,0 +1,25 @@
+// Auto-generated from xtUML model
+public class {{ class.name }}
+{
+    {% for a in class.attributes %}
+    private {{ a.type }} {{ a.name }};
+    {% endfor %}
+
+    public {{ class.name }}({% for a in class.attributes %}{{ a.type }} {{ a.name }}{% if not loop.last %}, {% endif %}{% endfor %})
+    {
+        {% for a in class.attributes %}
+        this.{{ a.name }} = {{ a.name }};
+        {% endfor %}
+    }
+
+    {% for m in class.methods %}
+    public void {{ m.name }}()
+    {
+        {% if m.body | trim != "" %}
+        {{ m.body | replace(from="\n", to="\n        ") }}
+        {% else %}
+        // TODO: implement method
+        {% endif %}
+    }
+    {% endfor %}
+}

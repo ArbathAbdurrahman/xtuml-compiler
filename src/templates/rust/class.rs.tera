@@ -1,0 +1,26 @@
+// Auto-generated from xtUML model
+pub struct {{ class.name }} {
+    {% for a in class.attributes %}
+    pub {{ a.name }}: {{ a.type }},
+    {% endfor %}
+}
+
+impl {{ class.name }} {
+    pub fn new({% for a in class.attributes %}{{ a.name }}: {{ a.type }}{% if not loop.last %}, {% endif %}{% endfor %}) -> Self {
+        {{ class.name }} {
+            {% for a in class.attributes %}
+            {{ a.name }},
+            {% endfor %}
+        }
+    }
+
+    {% for m in class.methods %}
+    pub fn {{ m.name }}(&self) {
+        {% if m.body | trim != "" %}
+        {{ m.body | replace(from="\n", to="\n        ") }}
+        {% else %}
+        // TODO: implement method
+        {% endif %}
+    }
+    {% endfor %}
+}

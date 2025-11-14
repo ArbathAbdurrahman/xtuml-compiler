@@ -5,7 +5,7 @@ use anyhow::{Result, Context as AnyhowContext};
 use std::fs;
 use include_dir::{include_dir, Dir};
 
-static TEMPLATE_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/src/templates/c");
+static TEMPLATE_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/src/templates/golang");
 
 pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     let mut tera = Tera::default();
@@ -20,12 +20,12 @@ pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     for cls in &model.classes {
         let mut ctx = Context::new();
         ctx.insert("class", &cls);
-        combined.push_str(&tera.render("class.c.tera", &ctx)?);
+        combined.push_str(&tera.render("class.go.tera", &ctx)?);
         combined.push_str("\n\n");
     }
 
-    let out_path = out_dir.join("model.c");
+    let out_path = out_dir.join("model.go");
     fs::write(&out_path, combined)
-        .with_context(|| format!("Failed to write C output to {:?}", out_path))?;
+        .with_context(|| format!("Failed to write Go output to {:?}", out_path))?;
     Ok(())
 }

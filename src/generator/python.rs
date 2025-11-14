@@ -34,6 +34,6 @@ pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     // Tulis hasil gabungan ke satu file
     let out_path = out_dir.join("model.py");
     fs::write(&out_path, combined)
-        .with_context(|| format!("failed to write file {}", out_path.display()))?;
+        .with_context(|| format!("Failed to write Python output to {:?}", out_path))?;
     Ok(())
 }

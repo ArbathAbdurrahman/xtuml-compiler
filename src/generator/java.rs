@@ -1,7 +1,7 @@
 use crate::parser::Model;
 use tera::{Tera, Context};
 use std::path::Path;
-use anyhow::{Result};
+use anyhow::{Result, Context as AnyhowContext};
 use std::fs;
 use include_dir::{include_dir, Dir};
 
@@ -25,6 +25,7 @@ pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     }
 
     let out_path = out_dir.join("model.java");
-    fs::write(&out_path, combined)?;
+    fs::write(&out_path, combined)
+        .with_context(|| format!("Failed to write Java output to {:?}", out_path))?;
     Ok(())
 }

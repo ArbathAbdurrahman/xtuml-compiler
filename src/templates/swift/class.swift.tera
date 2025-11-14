@@ -1,0 +1,22 @@
+// Auto-generated from xtUML model
+class {{ class.name }} {
+    {% for a in class.attributes %}
+    private var {{ a.name }}: {{ a.type }}
+    {% endfor %}
+
+    init({% for a in class.attributes %}{{ a.name }}: {{ a.type }}{% if not loop.last %}, {% endif %}{% endfor %}) {
+        {% for a in class.attributes %}
+        self.{{ a.name }} = {{ a.name }}
+        {% endfor %}
+    }
+
+    {% for m in class.methods %}
+    func {{ m.name }}() {
+        {% if m.body | trim != "" %}
+        {{ m.body | replace(from="\n", to="\n        ") }}
+        {% else %}
+        // TODO: implement method
+        {% endif %}
+    }
+    {% endfor %}
+}

@@ -1,0 +1,22 @@
+// Auto-generated from xtUML model
+export class {{ class.name }} {
+    {% for a in class.attributes %}
+    private {{ a.name }}: {{ a.type }};
+    {% endfor %}
+
+    constructor({% for a in class.attributes %}{{ a.name }}: {{ a.type }}{% if not loop.last %}, {% endif %}{% endfor %}) {
+        {% for a in class.attributes %}
+        this.{{ a.name }} = {{ a.name }};
+        {% endfor %}
+    }
+
+    {% for m in class.methods %}
+    public {{ m.name }}(): void {
+        {% if m.body | trim != "" %}
+        {{ m.body | replace(from="\n", to="\n        ") }}
+        {% else %}
+        // TODO: implement method
+        {% endif %}
+    }
+    {% endfor %}
+}

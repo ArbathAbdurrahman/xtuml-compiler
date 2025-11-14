@@ -25,6 +25,7 @@ pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     }
 
     let out_path = out_dir.join("model.js");
-    fs::write(&out_path, combined)?;
+    fs::write(&out_path, combined)
+        .with_context(|| format!("Failed to write Javascript output to {:?}", out_path))?;
     Ok(())
 }
