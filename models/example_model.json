@@ -22,8 +22,8 @@
         {"name": "registered_at", "type": "datetime"}
       ],
       "methods": [
-        {"name": "get_order_history", "body": "# Implies relationship: R1 'placed by' Customer(1) -> Order(M)\nreturn Orders.filter(customer_id=self.id)"},
-        {"name": "update_email", "body": "self.email = new_email\n# TODO: raise event CustomerEmailUpdated"}
+        {"name": "get_order_history", "body": "// Implies relationship: R1 'placed by' Customer(1) -> Order(M)\nreturn Orders.filter(customer_id=self.id)"},
+        {"name": "update_email", "body": "self.email = new_email\n// TODO: raise event CustomerEmailUpdated"}
       ]
     },
     {
@@ -36,9 +36,9 @@
         {"name": "total_amount", "type": "float"}
       ],
       "methods": [
-        {"name": "confirm_order", "body": "self.status = 'confirmed'\n# TODO: raise event OrderConfirmed"},
-        {"name": "calculate_total", "body": "# Implies relationship: R2 'contains' Order(1) -> OrderItem(M)\ntotal = 0\nitems = OrderItems.filter(order_id=self.id)\nfor item in items:\n  total += item.get_subtotal()\nself.total_amount = total"},
-        {"name": "ship_order", "body": "if self.status == 'confirmed':\n  self.status = 'shipped'\n  # TODO: raise event OrderShipped"}
+        {"name": "confirm_order", "body": "self.status = 'confirmed'\n// TODO: raise event OrderConfirmed"},
+        {"name": "calculate_total", "body": "// Implies relationship: R2 'contains' Order(1) -> OrderItem(M)\ntotal = 0\nitems = OrderItems.filter(order_id=self.id)\nfor item in items:\n  total += item.get_subtotal()\nself.total_amount = total"},
+        {"name": "ship_order", "body": "if self.status == 'confirmed':\n  self.status = 'shipped'\n  // TODO: raise event OrderShipped"}
       ]
     },
     {
@@ -52,7 +52,7 @@
       ],
       "methods": [
         {"name": "get_subtotal", "body": "return self.quantity * self.price_per_unit"},
-        {"name": "get_product_name", "body": "# Implies relationship: R3 'references' OrderItem(M) -> Product(1)\nproduct = Products.get(id=self.product_id)\nreturn product.name"}
+        {"name": "get_product_name", "body": "// Implies relationship: R3 'references' OrderItem(M) -> Product(1)\nproduct = Products.get(id=self.product_id)\nreturn product.name"}
       ]
     },
     {
@@ -65,8 +65,8 @@
         {"name": "price", "type": "float"}
       ],
       "methods": [
-        {"name": "get_inventory_level", "body": "# Implies relationship: R4 'has' Product(1) -> Inventory(1)\ninventory = Inventory.get(product_id=self.id)\nreturn inventory.stock_level"},
-        {"name": "update_price", "body": "self.price = new_price\n# TODO: raise event ProductPriceChanged"}
+        {"name": "get_inventory_level", "body": "// Implies relationship: R4 'has' Product(1) -> Inventory(1)\ninventory = Inventory.get(product_id=self.id)\nreturn inventory.stock_level"},
+        {"name": "update_price", "body": "self.price = new_price\n// TODO: raise event ProductPriceChanged"}
       ]
     },
     {
@@ -78,7 +78,7 @@
         {"name": "location", "type": "str"}
       ],
       "methods": [
-        {"name": "decrement_stock", "body": "if self.stock_level >= amount:\n  self.stock_level -= amount\n  if self.stock_level < 10:\n    # TODO: raise event LowStockWarning\nelse:\n  # TODO: raise event OutOfStockError"},
+        {"name": "decrement_stock", "body": "if self.stock_level >= amount:\n  self.stock_level -= amount\n  if self.stock_level < 10:\n    // TODO: raise event LowStockWarning\nelse:\n  // TODO: raise event OutOfStockError"},
         {"name": "increment_stock", "body": "self.stock_level += amount"}
       ]
     }

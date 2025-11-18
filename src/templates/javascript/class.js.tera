@@ -1,23 +1,24 @@
 export class {{ class.name }} {
     constructor({% if class.attributes | length > 0 %}{% for a in class.attributes %}{{ a.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}) {
-        {% if class.attributes | length == 0 %}
+        {%- if class.attributes | length == 0 %}
         // no attributes
-        {% else %}
-        {% for a in class.attributes %}
+        {%- else %}
+        {%- for a in class.attributes %}
         this.{{ a.name }} = {{ a.name }};
-        {% endfor %}
-        {% endif %}
+        {%- endfor %}
+        {%- endif %}
     }
-
-    {% if class.methods %}
-    {% for m in class.methods %}
+    {% if class.methods -%}
+    {%- for m in class.methods %}
     {{ m.name }}() {
-        {% if m.body | trim != "" %}
-        {{ m.body | replace(from="\n", to="\n        ") }}
+        {%- if m.body | trim != "" -%}
+        {% for line in m.body | split(pat="\n") %}
+        {{ line }}
+        {%- endfor -%}
         {% else %}
         // TODO: implement method
         {% endif %}
     }
-    {% endfor %}
+    {% endfor -%}
     {% endif %}
 }

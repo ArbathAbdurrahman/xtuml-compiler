@@ -50,6 +50,26 @@ pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     let filename = format!("{}_model.py", safe_name);
     let out_path = out_dir.join(filename);
 
+    let combined = combined
+        .lines()
+        .map(|line| {
+            let trimmed = line.trim_start();
+
+            if trimmed.starts_with("//") {
+                // hitung indentasi
+                let indent = line.len() - trimmed.len();
+                let indent_spaces = " ".repeat(indent);
+
+                // ubah: // something → # something
+                let after = trimmed.trim_start_matches("//").trim_start();
+                format!("{}# {}", indent_spaces, after)
+            } else {
+                line.to_string()
+            }
+        })
+        .collect::<Vec<_>>()
+        .join("\n");
+
     fs::write(&out_path, combined)
         .with_context(|| format!("Failed to write Python output to {:?}", out_path))?;
     Ok(())
