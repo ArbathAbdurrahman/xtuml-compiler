@@ -27,9 +27,23 @@ pub fn generate(model: &Model, out_dir: &Path) -> Result<()> {
     for cls in &model.classes {
         let mut ctx = Context::new();
         ctx.insert("class", &cls);
+
+        // ambil event yang trigger-nya == nama class
+        let class_events: Vec<_> = model.events
+            .iter()
+            .filter(|ev| ev.trigger.clone().unwrap_or_default() == cls.name)
+            .collect();
+
+        ctx.insert("class_events", &class_events);
+
         combined.push_str(&tera.render("class.js.tera", &ctx)?);
         combined.push_str("\n\n");
     }
+    let mut ctx_events = Context::new();
+    ctx_events.insert("events", &model.events);
+    combined.push_str(&tera.render("event.js.tera", &ctx_events)?);
+    combined.push_str("\n\n");
+
 
     combined.push_str(&tera.render("footer.js.tera", &Context::new())?);
 

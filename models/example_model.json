@@ -16,79 +16,112 @@
       "name": "Customer",
       "domain_ref": "UserOrder",
       "attributes": [
-        {"name": "id", "type": "int"},
-        {"name": "name", "type": "str"},
-        {"name": "email", "type": "str"},
-        {"name": "registered_at", "type": "datetime"}
+        { "name": "id", "type": "int" },
+        { "name": "name", "type": "str" },
+        { "name": "email", "type": "str" },
+        { "name": "registered_at", "type": "datetime" }
       ],
       "methods": [
-        {"name": "get_order_history", "body": "// Implies relationship: R1 'placed by' Customer(1) -> Order(M)\nreturn Orders.filter(customer_id=self.id)"},
-        {"name": "update_email", "body": "self.email = new_email\n// TODO: raise event CustomerEmailUpdated"}
+        {
+          "name": "get_order_history",
+          "body": "// Implies relationship: R1 'placed by' Customer(1) -> Order(M)\nreturn Orders.filter(o => o.customer_id === this.id);"
+        },
+        {
+          "name": "update_email",
+          "body": "this.email = new_email;\n// TODO: raise event CustomerEmailUpdated"
+        }
       ]
     },
     {
       "name": "Order",
       "attributes": [
-        {"name": "id", "type": "int"},
-        {"name": "customer_id", "type": "int"},
-        {"name": "status", "type": "str"},
-        {"name": "created_at", "type": "datetime"},
-        {"name": "total_amount", "type": "float"}
+        { "name": "id", "type": "int" },
+        { "name": "customer_id", "type": "int" },
+        { "name": "status", "type": "str" },
+        { "name": "created_at", "type": "datetime" },
+        { "name": "total_amount", "type": "float" }
       ],
       "methods": [
-        {"name": "confirm_order", "body": "self.status = 'confirmed'\n// TODO: raise event OrderConfirmed"},
-        {"name": "calculate_total", "body": "// Implies relationship: R2 'contains' Order(1) -> OrderItem(M)\ntotal = 0\nitems = OrderItems.filter(order_id=self.id)\nfor item in items:\n  total += item.get_subtotal()\nself.total_amount = total"},
-        {"name": "ship_order", "body": "if self.status == 'confirmed':\n  self.status = 'shipped'\n  // TODO: raise event OrderShipped"}
+        {
+          "name": "confirm_order",
+          "body": "this.status = 'confirmed';\n// TODO: raise event OrderConfirmed"
+        },
+        {
+          "name": "calculate_total",
+          "body": "// Implies relationship: R2 'contains' Order(1) -> OrderItem(M)\nlet total = 0;\nconst items = OrderItems.filter(item => item.order_id === this.id);\n\nfor (const item of items) {\n  total += item.get_subtotal();\n}\n\nthis.total_amount = total;"
+        },
+        {
+          "name": "ship_order",
+          "body": "if (this.status === 'confirmed') {\n  this.status = 'shipped';\n  // TODO: raise event OrderShipped\n}"
+        }
       ]
     },
     {
       "name": "OrderItem",
       "attributes": [
-        {"name": "id", "type": "int"},
-        {"name": "order_id", "type": "int"},
-        {"name": "product_id", "type": "int"},
-        {"name": "quantity", "type": "int"},
-        {"name": "price_per_unit", "type": "float"}
+        { "name": "id", "type": "int" },
+        { "name": "order_id", "type": "int" },
+        { "name": "product_id", "type": "int" },
+        { "name": "quantity", "type": "int" },
+        { "name": "price_per_unit", "type": "float" }
       ],
       "methods": [
-        {"name": "get_subtotal", "body": "return self.quantity * self.price_per_unit"},
-        {"name": "get_product_name", "body": "// Implies relationship: R3 'references' OrderItem(M) -> Product(1)\nproduct = Products.get(id=self.product_id)\nreturn product.name"}
+        {
+          "name": "get_subtotal",
+          "body": "return this.quantity * this.price_per_unit;"
+        },
+        {
+          "name": "get_product_name",
+          "body": "// Implies relationship: R3 'references' OrderItem(M) -> Product(1)\nconst product = Products.get({ id: this.product_id });\nreturn product.name;"
+        }
       ]
     },
     {
       "name": "Product",
       "attributes": [
-        {"name": "id", "type": "int"},
-        {"name": "sku", "type": "str"},
-        {"name": "name", "type": "str"},
-        {"name": "description", "type": "str"},
-        {"name": "price", "type": "float"}
+        { "name": "id", "type": "int" },
+        { "name": "sku", "type": "str" },
+        { "name": "name", "type": "str" },
+        { "name": "description", "type": "str" },
+        { "name": "price", "type": "float" }
       ],
       "methods": [
-        {"name": "get_inventory_level", "body": "// Implies relationship: R4 'has' Product(1) -> Inventory(1)\ninventory = Inventory.get(product_id=self.id)\nreturn inventory.stock_level"},
-        {"name": "update_price", "body": "self.price = new_price\n// TODO: raise event ProductPriceChanged"}
+        {
+          "name": "get_inventory_level",
+          "body": "// Implies relationship: R4 'has' Product(1) -> Inventory(1)\nconst inventory = Inventory.get({ product_id: this.id });\nreturn inventory.stock_level;"
+        },
+        {
+          "name": "update_price",
+          "body": "this.price = new_price;\n// TODO: raise event ProductPriceChanged"
+        }
       ]
     },
     {
       "name": "Inventory",
       "attributes": [
-        {"name": "id", "type": "int"},
-        {"name": "product_id", "type": "int"},
-        {"name": "stock_level", "type": "int"},
-        {"name": "location", "type": "str"}
+        { "name": "id", "type": "int" },
+        { "name": "product_id", "type": "int" },
+        { "name": "stock_level", "type": "int" },
+        { "name": "location", "type": "str" }
       ],
       "methods": [
-        {"name": "decrement_stock", "body": "if self.stock_level >= amount:\n  self.stock_level -= amount\n  if self.stock_level < 10:\n    // TODO: raise event LowStockWarning\nelse:\n  // TODO: raise event OutOfStockError"},
-        {"name": "increment_stock", "body": "self.stock_level += amount"}
+        {
+          "name": "decrement_stock",
+          "body": "if (this.stock_level >= amount) {\n  this.stock_level -= amount;\n\n  if (this.stock_level < 10) {\n    // TODO: raise event LowStockWarning\n  }\n} else {\n  // TODO: raise event OutOfStockError\n}"
+        },
+        {
+          "name": "increment_stock",
+          "body": "this.stock_level += amount;"
+        }
       ]
     }
   ],
   "events": [
-    {"name": "OrderConfirmed", "trigger": "Order", "action": "status = 'confirmed'"},
-    {"name": "CustomerEmailUpdated", "trigger": "Customer", "action": "send_verification_email()"},
-    {"name": "OrderShipped", "trigger": "Order", "action": "notify_customer_shipping()"},
-    {"name": "ProductPriceChanged", "trigger": "Product", "action": "notify_wishlist_users()"},
-    {"name": "LowStockWarning", "trigger": "Inventory", "action": "create_purchase_order()"},
-    {"name": "OutOfStockError", "trigger": "Inventory", "action": "notify_sales_team()"}
+    { "name": "OrderConfirmed", "trigger": "Order", "action": "status = 'confirmed'" },
+    { "name": "CustomerEmailUpdated", "trigger": "Customer", "action": "send_verification_email()" },
+    { "name": "OrderShipped", "trigger": "Order", "action": "notify_customer_shipping()" },
+    { "name": "ProductPriceChanged", "trigger": "Product", "action": "notify_wishlist_users()" },
+    { "name": "LowStockWarning", "trigger": "Inventory", "action": "create_purchase_order()" },
+    { "name": "OutOfStockError", "trigger": "Inventory", "action": "notify_sales_team()" }
   ]
 }

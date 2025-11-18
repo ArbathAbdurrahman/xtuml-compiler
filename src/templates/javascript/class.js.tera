@@ -21,4 +21,10 @@ export class {{ class.name }} {
     }
     {% endfor -%}
     {% endif %}
+    {%- set evs = class_events -%}
+
+{% for ev in evs %}
+    // Event: {{ ev.name }} -> {{ ev.action }}
+{% endfor %}
+
 }

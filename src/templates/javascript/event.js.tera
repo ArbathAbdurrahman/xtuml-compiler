@@ -1,0 +1,16 @@
+// Event Dispatcher
+export class EventBus {
+    static dispatch(eventName, payload) {
+        console.log(`[EVENT] ${eventName}`, payload);
+    }
+}
+
+// Event Definitions
+export const Events = {
+{% for ev in events %}
+  "{{ ev.name }}": {
+      trigger: "{{ ev.trigger }}",
+      action: "{{ ev.action }}"
+  }{% if not loop.last %},{% endif %}
+{% endfor %}
+};
